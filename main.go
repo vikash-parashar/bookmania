@@ -12,7 +12,6 @@ import (
 func init() {
 	// Load the application configuration
 	config.LoadConfig()
-
 	// Initialize the database connection
 	db.Init()
 }
@@ -25,6 +24,8 @@ func main() {
 	// Use the error handling middleware globally
 	router.Use(middleware.ErrorMiddleware())
 
+	// Serve static files (CSS, fonts, JS, images)
+	router.Static("/static", "./static")
 	// Initialize routes
 	routes.SetupRoutes(router)
 	// Start the server
