@@ -3,9 +3,11 @@
 package controllers
 
 import (
+	"log"
 	"my_bookstore/config"
 	"my_bookstore/db"
 	"my_bookstore/models"
+	"my_bookstore/render"
 	"my_bookstore/utils"
 	"net/http"
 	"time"
@@ -16,6 +18,10 @@ import (
 
 // Login handles user login and JWT token generation.
 func Login(c *gin.Context) {
+	if err := render.RenderTemplate(c.Writer, "login", nil); err != nil {
+		log.Println(err)
+	}
+
 	var loginData struct {
 		Email    string `json:"email"`
 		Password []byte `json:"password"`
@@ -58,6 +64,13 @@ func Login(c *gin.Context) {
 
 	// Respond with the JWT token
 	c.JSON(http.StatusOK, gin.H{"token": tokenString, "message": "Logged in successfully"})
+}
+
+// Login handles user login and JWT token generation.
+func LoginPage(c *gin.Context) {
+	if err := render.RenderTemplate(c.Writer, "login", nil); err != nil {
+		log.Println(err)
+	}
 }
 
 // Logout invalidates the JWT token (client-side implementation).

@@ -1,0 +1,22 @@
+{{template "base" .}}
+
+{{define "content"}}
+    <div class="conatiner">
+            <div class="row">
+                <div class="col">
+                    <h2>This is Login page</h2>
+                    <form action="/login">
+                        <label for="">Email</label>
+                        <input type="text" name="email" id="email">
+
+                        <label for="">Password</label>
+                        <input type="password" name="password" id="password">
+
+                        <input type="submit">
+                    </form>
+                </div>
+         </div>
+    </div>
+{{end}}
+{{define "js"}}
+{{end}}
