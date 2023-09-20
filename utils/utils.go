@@ -9,8 +9,8 @@ import (
 	"my_bookstore/models"
 	"net/http"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
@@ -23,6 +23,7 @@ func GenerateUUID() string {
 
 // HashPassword generates a bcrypt hash of a password.
 func HashPassword(password string) (string, error) {
+	// Generate a bcrypt hash of the provided password with a default cost factor
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -30,19 +31,21 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-// CheckPasswordHash checks if a password matches its bcrypt hash.
+// MatchWithHashPassword checks if a password matches its bcrypt hash.
 func MatchWithHashPassword(providedPassword []byte, storedPassword []byte) bool {
+	// Compare the provided password with the stored hash
 	err := bcrypt.CompareHashAndPassword(storedPassword, providedPassword)
 	if err != nil {
-		log.Println(err)
+		log.Println(err) // Log the error, but continue processing
 		return false
 	}
 	return true
 }
 
+// ExtractEmailFromToken extracts the email from a JWT token.
 func ExtractEmailFromToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// You should replace "your-secret-key" with your actual JWT secret key
+		// Replace "your-secret-key" with your actual JWT secret key
 		secretKey := []byte("your-secret-key")
 		return secretKey, nil
 	})
@@ -58,6 +61,8 @@ func ExtractEmailFromToken(tokenString string) (string, error) {
 		return "", fmt.Errorf("Invalid JWT token")
 	}
 }
+
+// GetUserByID retrieves user data based on their role and renders the appropriate user profile template.
 func GetUserByID(c *gin.Context) {
 	// Get the user's role from the Gin context
 	userRole, _ := c.Get("role")
@@ -72,6 +77,7 @@ func GetUserByID(c *gin.Context) {
 	}
 }
 
+// renderAdminUserProfile renders the admin user profile template with user data.
 func renderAdminUserProfile(c *gin.Context) {
 	// Get user data and other necessary information
 	userID := c.Param("id") // Assuming you're getting the user ID from the URL
@@ -89,6 +95,7 @@ func renderAdminUserProfile(c *gin.Context) {
 	})
 }
 
+// renderRegularUserProfile renders the regular user profile template with user data.
 func renderRegularUserProfile(c *gin.Context) {
 	// Get user data and other necessary information
 	userID := c.Param("id") // Assuming you're getting the user ID from the URL
@@ -106,7 +113,7 @@ func renderRegularUserProfile(c *gin.Context) {
 	})
 }
 
-// GetUserByID retrieves user data from the database by user ID.
+// getUserByID retrieves user data from the database by user ID.
 func getUserByID(userID string) (*models.User, error) {
 	// Assuming you are using a SQL database (e.g., PostgreSQL, MySQL)
 	db, err := sql.Open("your-database-driver", "connection-string")

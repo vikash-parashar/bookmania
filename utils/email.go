@@ -55,18 +55,3 @@ func SendGreetingEmail(userName, userEmail, emailTemplatePath string) error {
 
 	return nil
 }
-
-// How To Use ?
-
-/*
-
-	userName := "John Doe"
-	userEmail := "user@example.com"
-	emailTemplatePath := "email_template.html" // Replace with your email template file
-
-	err := SendGreetingEmail(userName, userEmail, emailTemplatePath)
-	if err != nil {
-		log.Fatal("Error sending email:", err)
-	}
-
-*/

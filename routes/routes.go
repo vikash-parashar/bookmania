@@ -21,10 +21,19 @@ func SetupRoutes(router *gin.Engine) {
 	// Authentication-related routes
 	authGroup := router.Group("/auth")
 	{
+		// Render the login page
 		authGroup.GET("/login", controllers.LoginPage)
+
+		// Handle user login
 		authGroup.POST("/login", controllers.Login)
+
+		// Render the registration page
 		authGroup.GET("/register", controllers.RegisterPage)
+
+		// Handle user registration
 		authGroup.POST("/register", controllers.Register)
+
+		// Handle user logout
 		authGroup.POST("/logout", controllers.Logout)
 	}
 
@@ -34,14 +43,25 @@ func SetupRoutes(router *gin.Engine) {
 		// Use the AuthMiddleware for user-related routes
 		userGroup.Use(middleware.AuthMiddleware())
 
+		// Create a new user
 		userGroup.POST("/", controllers.CreateUser)
+
+		// Retrieve user information by ID
 		userGroup.GET("/:id", controllers.GetUserByID)
+
+		// Update user information by ID
 		userGroup.PUT("/:id", controllers.UpdateUser)
+
+		// Delete user by ID
 		userGroup.DELETE("/:id", controllers.DeleteUser)
 
-		// Order-related routes for users
+		// View order history for a user
 		userGroup.GET("/:id/orders", controllers.ViewOrderHistory)
+
+		// Buy a book for a user
 		userGroup.POST("/:id/orders/buy", controllers.BuyBook)
+
+		// Rent a book for a user
 		userGroup.POST("/:id/orders/rent", controllers.RentBook)
 	}
 
@@ -51,24 +71,24 @@ func SetupRoutes(router *gin.Engine) {
 		// Use the AuthMiddleware for admin-related routes (if needed)
 		// adminGroup.Use(middleware.AuthMiddleware())
 
-		// Book-related routes for admins
+		// View and manage books for admins
 		adminGroup.GET("/books", controllers.ManageBooks)
 		adminGroup.POST("/books", controllers.CreateBook)
 		adminGroup.GET("/books/:id", controllers.GetBookByID)
 		adminGroup.PUT("/books/:id", controllers.UpdateBook)
 		adminGroup.DELETE("/books/:id", controllers.DeleteBook)
 
-		// Order-related routes for admins
+		// View and manage orders for admins
 		adminGroup.GET("/orders", controllers.ViewAllOrders)
 		adminGroup.GET("/orders/user/:email", controllers.ViewOrderByUserEmail)
 		adminGroup.PUT("/orders/:id", controllers.UpdateOrderStatus)
 		adminGroup.POST("/orders/cancel/:id", controllers.CancelOrder)
 		adminGroup.DELETE("/orders/:id", controllers.DeleteOrder)
 
-		// Total sales route for admins
+		// Generate a sales report for admins
 		adminGroup.GET("/sales", controllers.GenerateSalesReport)
 
-		// User-related routes for admins
+		// View and manage users for admins
 		adminGroup.GET("/users", controllers.GetAllUsers)
 		adminGroup.POST("/users", controllers.CreateUser)
 		adminGroup.GET("/users/:id", controllers.GetUserByID)
