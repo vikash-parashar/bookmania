@@ -4,6 +4,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
@@ -25,9 +26,13 @@ func HashPassword(password string) (string, error) {
 }
 
 // CheckPasswordHash checks if a password matches its bcrypt hash.
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+func MatchWithHashPassword(providedPassword []byte, storedPassword []byte) bool {
+	err := bcrypt.CompareHashAndPassword(storedPassword, providedPassword)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
 }
 
 func ExtractEmailFromToken(tokenString string) (string, error) {

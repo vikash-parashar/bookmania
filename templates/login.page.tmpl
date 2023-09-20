@@ -1,22 +1,77 @@
 {{template "base" .}}
 
 {{define "content"}}
-    <div class="conatiner">
-            <div class="row">
-                <div class="col">
-                    <h2>This is Login page</h2>
-                    <form action="/login">
-                        <label for="">Email</label>
-                        <input type="text" name="email" id="email">
-
-                        <label for="">Password</label>
-                        <input type="password" name="password" id="password">
-
-                        <input type="submit">
-                    </form>
+<div class="container-fluid mt-5">
+    <h2 class="text-center">Login</h2>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center align-items-center">
+            <!-- Use a traditional HTML form with the action attribute -->
+            <form id="loginForm" action="/auth/login" method="POST">
+                <div class="form-group">
+                    <input type="email" class="form-control" id="email" name="email" required
+                        placeholder="Email">
                 </div>
-         </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" required
+                        placeholder="Password">
+                </div>
+                <!-- Change the button type back to "submit" -->
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
+                    Logged in successfully!
+                </div>
+                <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
+                    <!-- Error message will be displayed here -->
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 {{end}}
+
 {{define "js"}}
+<!-- jQuery is already included in the HTML template -->
+<script>
+$(document).ready(function () {
+    $("#loginForm").submit(function (e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+
+        var email = $("#email").val().trim();
+        var password = $("#password").val().trim();
+
+        if (email === "" || password === "") {
+            // Display an error message for empty fields
+            $("#errorMessage").text("Email and password are required.");
+            $("#errorMessage").show();
+            return;
+        }
+
+        // Create a JavaScript object with the form data
+        var formData = {
+            email: email,
+            password: password
+        };
+
+        // Send a POST request with JSON data
+        $.ajax({
+            type: "POST",
+            url: "/auth/login",
+            data: JSON.stringify(formData), // Serialize the object to JSON
+            contentType: "application/json", // Set the content type to JSON
+            success: function (response) {
+                // Handle the response as before
+                // ...
+            },
+            error: function (error) {
+                // Handle AJAX errors, if any
+                console.error("AJAX error:", error);
+                // Display a generic error message
+                $("#errorMessage").text("An error occurred. Please try again later.");
+                $("#errorMessage").show();
+            }
+        });
+    });
+});
+
+</script>
 {{end}}
