@@ -5,6 +5,7 @@ package routes
 import (
 	"my_bookstore/controllers"
 	"my_bookstore/middleware"
+	"my_bookstore/render"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,11 @@ func SetupRoutes(router *gin.Engine) {
 	// Example:
 	// router.Use(middleware.AuthMiddleware())
 	// ...
+	// Define a route handler for rendering the success page
+	router.GET("/success", render.RenderSuccessPage)
 
+	// Define a route handler for rendering the error page
+	router.GET("/error", render.RenderErrorPage)
 	// Authentication-related routes
 	authGroup := router.Group("/auth")
 
