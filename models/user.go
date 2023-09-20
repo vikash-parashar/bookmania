@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 const (
 	Admin   = "admin"
-	General = "General"
+	General = "user"
 )
 
 type User struct {
@@ -15,7 +15,7 @@ type User struct {
 	Phone     string  `json:"phone"`
 	Orders    []Order `json:"orders"`
 	Password  []byte  `json:"password"`
-	UserType  string  `json:"user_type"`
+	Role      string  `json:"role"`
 	HNo       string  `json:"house_no"`
 	Street    string  `json:"street"`
 	City      string  `json:"city"`
