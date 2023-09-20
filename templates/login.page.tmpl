@@ -1,30 +1,87 @@
 {{template "base" .}}
 
+{{define "css"}}
+<style>
+    /* Add custom CSS for styling */
+    body {
+        background-image: url("/static/images/img2.jpg"); /* Path to your background image */
+        background-size: cover;
+        background-blur: 5px; /* Apply a blur effect to the background image */
+        background-attachment: fixed;
+    }
+
+    .container-fluid {
+        height: 100vh; /* Make the container fill the viewport height */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for the form */
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    h2 {
+        color: #007bff; /* Set a primary color for headings */
+    }
+
+    /* Style form fields */
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    /* Style the Login button */
+    .btn-primary {
+        background-color: #17a2b8; /* Change the button color */
+        border-color: #17a2b8;
+        display: block;
+        margin: 0 auto; /* Center-align the button */
+    }
+
+    .btn-primary:hover {
+        background-color: #117a8b; /* Darker shade on hover */
+    }
+
+    /* Style success and error alerts */
+    .alert-success {
+        background-color: #d4edda; /* Green background for success */
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da; /* Red background for error */
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+</style>
+{{end}}
+
 {{define "content"}}
-<div class="container-fluid mt-5">
-    <h2 class="text-center">Login</h2>
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center align-items-center">
-            <!-- Use a traditional HTML form with the action attribute -->
-            <form id="loginForm" action="/auth/login" method="POST">
-                <div class="form-group">
-                    <input type="email" class="form-control" id="email" name="email" required
-                        placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="password" name="password" required
-                        placeholder="Password">
-                </div>
-                <!-- Change the button type back to "submit" -->
-                <button type="submit" class="btn btn-primary">Login</button>
-                <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
-                    Logged in successfully!
-                </div>
-                <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
-                    <!-- Error message will be displayed here -->
-                </div>
-            </form>
-        </div>
+<div class="container-fluid">
+    <div class="login-container col-5">
+        <h2 class="text-center">Login</h2>
+        <!-- Use a traditional HTML form with the action attribute -->
+        <form id="loginForm" action="/auth/login" method="POST">
+            <div class="form-group">
+                <input type="email" class="form-control" id="email" name="email" required
+                    placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" required
+                    placeholder="Password">
+            </div>
+            <!-- Change the button type back to "submit" -->
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
+                Logged in successfully!
+            </div>
+            <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;">
+                <!-- Error message will be displayed here -->
+            </div>
+        </form>
     </div>
 </div>
 {{end}}
