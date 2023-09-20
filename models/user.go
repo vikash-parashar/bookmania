@@ -12,11 +12,13 @@ type User struct {
 	FirstName string  `json:"first_name"`
 	LastName  string  `json:"last_name"`
 	Email     string  `json:"email" gorm:"unique"`
-	AddressID uint    `json:"-"`
-	ContactID uint    `json:"-"`
+	Phone     string  `json:"phone"`
 	Orders    []Order `json:"orders"`
 	Password  []byte  `json:"password"`
 	UserType  string  `json:"user_type"`
-	Address   Address `json:"address" gorm:"foreignKey:AddressID"`
-	Contact   Contact `json:"contact" gorm:"foreignKey:ContactID"`
+	HNo       string  `json:"house_no"`
+	Street    string  `json:"street"`
+	City      string  `json:"city"`
+	State     string  `json:"state"`
+	PinCode   string  `json:"pin_code"`
 }
