@@ -4,7 +4,7 @@
 {{end}}
 
 {{define "content"}}
- <div class="container-fluid mt-5">
+    <div class="container-fluid mt-5">
         <h2 class="text-center">Register User</h2>
         <div class="row">
             <div class="col-12 d-flex justify-content-center align-items-center">
@@ -36,42 +36,51 @@
                                 required placeholder="Confirm Password">
                         </div>
                         <button type="submit" class="btn btn-primary">Register</button>
-                        <div id="successMessage" class="alert alert-success mt-3" style="display: none;">
-                            Account created successfully!
-                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <div id="registrationAlert" class="alert alert-success mt-3" style="display: none;">
+        Account created successfully!
+    </div>
+    <div id="registrationAlert" class="alert alert-danger mt-3" style="display: none;">
+        Account created successfully!
+    </div>
+
 {{end}}
 
 {{define "js"}}
-    <script>
-        $(document).ready(function () {
-            $("#registrationForm").submit(function (e) {
-                e.preventDefault(); 
+<script>
+    $(document).ready(function () {
+        $("#registrationForm").submit(function (e) {
+            e.preventDefault();
 
-                // Send a POST request to the backend
-                $.ajax({
-                    type: "POST",
-                    url: "your-backend-url",
-                    data: formData,
-                    success: function (response) {
-                        if (response.success) {
-                            // Hide the form and show the success message
-                            $("#registrationForm").hide();
-                            $("#successMessage").show();
-                        } else {
-                            // Handle any error response from the backend
-                            // For example, display an error message to the user
-                        }
-                    },
-                    error: function (error) {
-                        // Handle AJAX errors, if any
+            // Serialize the form data
+            const formData = $(this).serialize();
+
+            // Send a POST request to the backend
+            $.ajax({
+                type: "POST",
+                url: "/auth/register",
+                data: formData,
+                dataType: "json", // Expect JSON response
+                success: function (response) {
+                    if (response.message === "User created successfully") {
+                        // Hide the form and show the success alert
+                        $("#registrationForm").hide();
+                        $("#registrationAlert").show(); // Show the success alert
+                    } else {
+                        // Show the error message
+                        $("#errorMessage").text("Failed to create an account. " + response.error).show();
                     }
-                });
+                },
+                error: function (error) {
+                    // Handle AJAX errors, if any
+                    console.error("Error:", error);
+                }
             });
         });
-    </script>
+    });
+</script>
 {{end}}

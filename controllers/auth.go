@@ -6,7 +6,8 @@ import (
 	"errors"
 	"log"
 	"my_bookstore/db"
-	"my_bookstore/middleware"
+
+	// "my_bookstore/middleware"
 	"my_bookstore/models"
 	"my_bookstore/render"
 	"my_bookstore/utils"
@@ -50,18 +51,22 @@ func Login(c *gin.Context) {
 	// Compare the provided password with the hashed password in the database
 	if utils.MatchWithHashPassword([]byte(loginData.Password), storedUser.Password) {
 		// Generate a JWT token using jwtutil.GenerateToken
-		tokenString, err := middleware.GenerateToken(loginData.Email)
-		if err != nil {
-			log.Printf("Error generating JWT token: %v\n", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating JWT token"})
-			return
-		}
+		// tokenString, err := middleware.GenerateToken(loginData.Email)
+		// if err != nil {
+		// 	log.Printf("Error generating JWT token: %v\n", err)
+		// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating JWT token"})
+		// 	return
+		// }
 
 		// Send the token as a response
-		c.JSON(http.StatusOK, gin.H{"token": tokenString})
+
+		// c.JSON(http.StatusOK, gin.H{"token": tokenString})
+
+		c.HTML(http.StatusOK, "success.log.html", gin.H{"message": "you are now logged in"})
 	} else {
+		// Send a success message and render the success page
+		c.HTML(http.StatusOK, "error.log.html", gin.H{"message": "you have entered invalid email id or password"})
 		log.Println("Invalid credentials")
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 	}
 }
 
@@ -106,8 +111,10 @@ func Register(c *gin.Context) {
 			// Generate hashed password
 			hashedPassword, err := utils.HashPassword(loginData.Password)
 			if err != nil {
-				log.Printf("Error hashing password: %v\n", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Error hashing password"})
+
+				// For error cases, render the error page
+				c.HTML(http.StatusOK, "error.reg.html", nil)
+				log.Println("error : error hashing password")
 				return
 			}
 
@@ -122,24 +129,32 @@ func Register(c *gin.Context) {
 
 			// Store the user in the database
 			if err := db.DB.Create(&newUser).Error; err != nil {
-				log.Printf("Error creating user: %v\n", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating user"})
+
+				// For error cases, render the error page
+				c.HTML(http.StatusOK, "error.reg.html", gin.H{"error": "error while creating user"})
+				log.Println("error : error while creating user")
 				return
 			}
 
+			// Send a success message and render the success page
+			c.HTML(http.StatusOK, "success.reg.html", gin.H{"message": "User created successfully"})
+
 			// Send a success message in the response
-			c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
-		} else {
-			// Other error occurred while querying the database
-			log.Printf("Error querying user: %v\n", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
-			return
+			log.Println("message : User created successfully")
+			return // Return to prevent further execution
 		}
-	} else {
-		// User with the email already exists, return an error
-		c.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
+
+		// For error cases, render the error page
+		c.HTML(http.StatusOK, "error.reg.html", nil)
+		// Other error occurred while querying the database
+		log.Printf("error querying user: %v\n", err)
+		log.Println("error : database error")
 		return
 	}
+
+	// For error cases, render the error page
+	c.HTML(http.StatusOK, "error.reg.html", gin.H{"error": "user with this email is already exists"})
+	log.Println("error : user with this email is already exists")
 }
 
 // Logout invalidates the JWT token (client-side implementation).
